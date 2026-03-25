@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nasa-neows-framework"
+version = "0.1.0"
+description = "Framework testów API NASA NeoWs z uniwersalnymi metodami HTTP"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.32.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-html>=4.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = [
+    "test_*.py",
+    "*_test.py",
+    "tests_*.py"
+]
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --html=report.html --self-contained-html"
+minversion = "8.0"
+cache_dir = ".pytest_cache"
