@@ -4,7 +4,7 @@ import pytest
 import requests
 
 
-# Testy specyficzne NeoWs
+# Specific NeoWs tests
 def test_browse_endpoint_returns_data(client):
     data = client.get_browse()
     client.save_json_to_file(data, "responses/browse_page_0.json")
@@ -28,12 +28,18 @@ def test_neo_lookup_returns_data(client):
 
 
 @pytest.mark.negative
-def test_invalid_neo_id_returns_404(client):
-    with pytest.raises(requests.exceptions.HTTPError):
-        client.get_neo(neo_id=999999999)
+@pytest.mark.parametrize("neo_id", (999999999, 0, -23))
+def test_invalid_neo_id_returns_404(client, neo_id):
+    with pytest.raises(requests.exceptions.HTTPError)as excinfo:
+        client.get_neo(neo_id)
 
+    #really needed? 
+    response = excinfo.value.response
+    assert response.status_code == 404
+    print(response.text)
+    print(response.url)
 
-# Testy uniwersalne HTTP
+# Universal HTTP tests
 def test_generic_get_browse(client):
     data = client.get("neo/browse", params={"page": 0})
     assert data["page"]["total_elements"] > 0
@@ -46,7 +52,7 @@ def test_generic_get_feed(client):
 
 @pytest.mark.negative
 def test_put_returns_405_method_not_allowed(client):
-    """NASA NeoWs read-only, PUT zwraca 405."""
+    """NASA NeoWs read-only, PUT returns 405."""
     with pytest.raises(requests.exceptions.HTTPError, match="401"):
         client.put("neo/browse", json_data={"test": True})
 

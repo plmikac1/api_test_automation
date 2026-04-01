@@ -28,9 +28,9 @@ class NeoWsClient:
         self.session = requests.Session()
         self.session.params = {"api_key": self.api_key}
 
-    # Uniwersalne HTTP methods
+    # Universal HTTP methods
     def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """GET do dowolnego endpointu."""
+        """GET for any endpoint"""
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         #
         print("request sent: ", url, params)
@@ -75,7 +75,7 @@ class NeoWsClient:
         response.raise_for_status()
         return response.json()
 
-    # Specyficzne NeoWs (używają get())
+    # Specific NeoWs (get() is used)
     def get_feed(self, start_date: str, end_date: str = None) -> Dict[str, Any]:
         params = {"start_date": start_date}
         if end_date:
@@ -89,7 +89,7 @@ class NeoWsClient:
         return self.get(f"neo/{neo_id}")
 
     def save_json_to_file(self, data: dict, filepath: str) -> None:
-        """Zapisuje słownik (JSON) do pliku."""
+        """Saves (JSON) dictionary to a file"""
         path = Path(filepath)
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w", encoding="utf-8") as f:
